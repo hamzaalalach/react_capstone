@@ -6,10 +6,17 @@ import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from './react-auth0-spa';
 import config from './auth_config.json';
 import history from './utils/history';
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from './theme';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducer from './reducers';
 
-const onRedirectCallback = (appState) => {
+const onRedirectCallback = appState => {
 	history.push(appState && appState.targetUrl ? appState.targetUrl : window.location.pathname);
 };
+
+const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 ReactDOM.render(
 	<Auth0Provider
@@ -17,10 +24,12 @@ ReactDOM.render(
 		client_id={config.clientId}
 		redirect_uri={window.location.origin}
 		onRedirectCallback={onRedirectCallback}
-	>
-		<React.StrictMode>
-			<App />
-		</React.StrictMode>
+		audience={config.audience}>
+		<ThemeProvider theme={theme}>
+			<Provider store={store}>
+				<App />
+			</Provider>
+		</ThemeProvider>
 	</Auth0Provider>,
 	document.getElementById('root')
 );

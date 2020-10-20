@@ -1,68 +1,60 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Full Stack CAPSTONE PROJECT Frontend
 
-## Available Scripts
+Note: The following setup is for local use, otherwise the frontend is hosted at: [https://casting-cap.herokuapp.com](https://casting-cap.herokuapp.com/)
 
-In the project directory, you can run:
+## Getting Setup
 
-### `yarn start`
+> _tip_: this frontend is designed to work with [Flask-based Backend](../backend). It is recommended you stand up the backend first.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Installing Dependencies
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+#### Installing Node and NPM
 
-### `yarn test`
+This project depends on Nodejs and Node Package Manager (NPM). Before continuing, you must download and install Node (the download includes NPM) from [https://nodejs.com/en/download](https://nodejs.org/en/download/).
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### Installing project dependencies
 
-### `yarn build`
+This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the root directory of this repository. After cloning, open your terminal and run:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### Running the project
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `yarn eject`
+## Frameworks and tools
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The frontend was built using [React](https://reactjs.org/) and [Redux](https://redux.js.org).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## RBAC on the frontend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+RBAC is ensured and forced on the frontend using the following components:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### Can
+```javascript
+  <Can
+    user={user}
+    perform="get:actors, get:movies"
+    yes={() => (
+        <Fragment>
+            <img src={user.picture} alt="Profile" />
+            <h2>{user.name}</h2>
+            <p>{user.email}</p>
+            <code>{JSON.stringify(user, null, 2)}</code>
+        </Fragment>
+    )}
+    no={() => <Redirect to="/" />}
+    />
+```
+Can enables rbac on the frontend, with perfom the required permissions and user the user perfoming the action.
 
-## Learn More
+#### PrivateRoute
+```javascript
+<PrivateRoute path="/profile" component={Profile} />
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This component forces the user to be authenticated to access the specified component.
